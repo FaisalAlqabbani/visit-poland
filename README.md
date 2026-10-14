@@ -19,3 +19,4 @@ Place data lives in the `PLACES` array in `index.html` — edit text there.
 
 ## Changelog
 - 2026-10-14 — Initial build: page, images, credits, QR code, GitHub Pages deploy.
+- 2026-10-14 — Fix fact-card text invisible in dark mode; guard against horizontal overflow on phones.
