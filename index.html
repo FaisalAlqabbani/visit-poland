@@ -384,7 +384,13 @@ addEventListener("scroll",()=>{
   const loop=gsap.to(mq,{xPercent:-50,duration:22,ease:"none",repeat:-1});
   ScrollTrigger.create({onUpdate:s=>{ const v=gsap.utils.clamp(-6,6,s.getVelocity()/300); gsap.to(loop,{timeScale:v<0?-1+v/2:1+v,duration:.3,overwrite:true}); gsap.to(loop,{timeScale:v<0?-1:1,duration:1,delay:.3}); }});
 
-  gsap.utils.toArray(".reveal").filter(el=>!el.closest(".hero")).forEach(el=>{
+  /* opened at a section (e.g. the Fact or Cap QR → #factorcap): show it straight away, no scroll-in */
+  let jumpTo=null; try{ jumpTo=location.hash && document.querySelector(location.hash); }catch(e){}
+  if(jumpTo){
+    jumpTo.querySelectorAll(".reveal").forEach(el=>gsap.set(el,{opacity:1,y:0}));
+    addEventListener("load",()=>{ jumpTo.scrollIntoView(); ScrollTrigger.refresh(); });
+  }
+  gsap.utils.toArray(".reveal").filter(el=>!el.closest(".hero") && !(jumpTo && jumpTo.contains(el))).forEach(el=>{
     gsap.to(el,{opacity:1,y:0,duration:.9,ease:"power3.out",scrollTrigger:{trigger:el,start:"top 88%"}});
   });
 

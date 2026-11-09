@@ -4,6 +4,7 @@ Mobile-first, scroll-animated page about the best places to visit in Poland, ope
 
 - **Live:** https://faisalalqabbani.github.io/visit-poland/
 - **QR code:** `qr/visit-poland-qr.png` (print) and `qr/visit-poland-qr.svg` (vector)
+- **Fact or Cap QR:** opens straight at the facts section, https://faisalalqabbani.github.io/visit-poland/#factorcap — `qr/fact-or-cap-qr-card.png` (print card), `qr/fact-or-cap-qr.png`, `qr/fact-or-cap-qr.svg`. Printed, so keep the `factorcap` section id.
 
 ## Stack
 Single static `index.html` — no build step, so it loads fast on phones over busy event Wi-Fi.
@@ -28,3 +29,4 @@ Fact or Cap facts live in the `FACTS` array (`[emoji, text]`). Only true facts g
 - 2026-10-14 — Minimal-text redesign: removed paragraphs/chips; each place is now a full-screen photo with a big animated number and a one-line fact. Added scroll-reactive marquee, outline section numbers, 2-column phrase buttons. Replaced unverifiable stats (UNESCO count, population) with dated facts.
 - 2026-11-09 — Added "Fact or Cap" section (23 true facts from the booth team's FACT lists, duplicates merged; caps left out). Green FACT stamp, tap-through card, light/dark checked at 320/390px and desktop.
 - 2026-11-09 — Fact or Cap: added "← Previous" button; rewrote facts in plain English for non-Polish readers (who people are, what Polish words mean); added a line explaining "cap"; card has a fixed min-height so the buttons don't jump between facts.
+- 2026-11-09 — Fact or Cap QR code (links to `#factorcap`). When the page opens at a section via a link like that, that section shows immediately instead of waiting for its scroll-in animation, and re-snaps to it after load.
