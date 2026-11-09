@@ -17,13 +17,13 @@
 <link rel="preload" as="image" href="img/hero-d.webp" media="(min-aspect-ratio: 1/1)">
 <style>
 :root{
-  --red:#DC143C; --ink:#16110F; --paper:#F7F1E8; --muted:#6B5F57; --line:rgba(22,17,15,.12); --card:#fff;
+  --red:#DC143C; --green:#15803D; --ink:#16110F; --paper:#F7F1E8; --muted:#6B5F57; --line:rgba(22,17,15,.12); --card:#fff;
   --display:"Fraunces",Georgia,serif; --body:"Manrope",system-ui,sans-serif;
 }
 @media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){ --ink:#F5EEE6; --paper:#120E0D; --muted:#B3A79E; --line:rgba(245,238,230,.14); --card:#221B19; }
+  :root:not([data-theme="light"]){ --green:#4ADE80; --ink:#F5EEE6; --paper:#120E0D; --muted:#B3A79E; --line:rgba(245,238,230,.14); --card:#221B19; }
 }
-:root[data-theme="dark"]{ --ink:#F5EEE6; --paper:#120E0D; --muted:#B3A79E; --line:rgba(245,238,230,.14); --card:#221B19; }
+:root[data-theme="dark"]{ --green:#4ADE80; --ink:#F5EEE6; --paper:#120E0D; --muted:#B3A79E; --line:rgba(245,238,230,.14); --card:#221B19; }
 
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%;overflow-x:clip}
@@ -111,6 +111,23 @@ a{color:inherit}
 .ph .say{font-size:13px;font-weight:600;color:var(--muted)}
 .ph .say::after{content:" 🔊"}
 
+/* ---------- FACT OR CAP ---------- */
+.foc{max-width:980px;margin:0 auto;padding:76px 20px 20px}
+.foc h2{font-family:var(--display);font-weight:900;font-size:clamp(40px,11vw,64px);line-height:.95;letter-spacing:-.02em;margin:10px 0 22px}
+.foc h2 em{color:var(--green);font-style:italic}
+.foc__card{all:unset;box-sizing:border-box;cursor:pointer;position:relative;display:flex;flex-direction:column;justify-content:center;width:100%;min-height:230px;background:var(--card);border:1px solid var(--line);border-radius:26px;padding:56px 22px 26px;-webkit-tap-highlight-color:transparent;transition:transform .15s}
+.foc__card:active{transform:scale(.98)}
+.foc__card:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+.stamp{position:absolute;top:18px;left:18px;font-size:13px;font-weight:800;letter-spacing:.16em;color:var(--green);border:2px solid var(--green);border-radius:8px;padding:4px 10px;transform:rotate(-4deg)}
+.foc__em{font-size:44px;line-height:1}
+.foc__txt{font-family:var(--display);font-weight:800;font-size:clamp(24px,6.6vw,34px);line-height:1.15;letter-spacing:-.01em;margin-top:12px}
+.foc__card.swap .foc__em,.foc__card.swap .foc__txt{animation:focIn .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes focIn{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
+.foc__bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px}
+.foc__n{font-family:var(--display);font-weight:900;font-size:20px;color:var(--muted)}
+.foc__n b{color:var(--ink)}
+@media (prefers-reduced-motion: reduce){.foc__card.swap .foc__em,.foc__card.swap .foc__txt{animation:none}}
+
 /* ---------- OUTRO ---------- */
 .outro{position:relative;margin-top:60px;padding:100px 20px calc(60px + env(safe-area-inset-bottom));text-align:center;overflow:hidden;background:linear-gradient(180deg,#fff 0 50%,var(--red) 50% 100%)}
 .outro__box{position:relative;max-width:520px;margin:0 auto;background:var(--paper);color:var(--ink);border-radius:30px;padding:40px 24px;box-shadow:0 30px 60px -30px rgba(0,0,0,.45)}
@@ -197,6 +214,20 @@ a{color:inherit}
   </div>
 </section>
 
+<section class="foc" id="factorcap">
+  <div class="kicker reveal">Fact or Cap? 🧢</div>
+  <h2 class="reveal">All facts. <em>No cap.</em></h2>
+  <button class="foc__card reveal" id="focCard" aria-live="polite">
+    <span class="stamp">FACT ✓</span>
+    <span class="foc__em" id="focEm"></span>
+    <span class="foc__txt" id="focTxt"></span>
+  </button>
+  <div class="foc__bar reveal">
+    <span class="foc__n"><b id="focI">1</b> / <span id="focN"></span></span>
+    <button class="btn" id="focNext">Next fact →</button>
+  </div>
+</section>
+
 <section class="outro">
   <div class="outro__box reveal">
     <div class="kicker">HTU International Week</div>
@@ -266,6 +297,46 @@ document.querySelectorAll("[data-say]").forEach(b=>b.addEventListener("click",()
   b.classList.add("on"); setTimeout(()=>b.classList.remove("on"),450);
   if(navigator.vibrate) navigator.vibrate(15);
 }));
+
+/* Fact or Cap: true facts only, shuffled each visit */
+const FACTS = [
+  ["🏛️","Warsaw is the capital of Poland."],
+  ["💰","Poland's currency is the złoty, not the euro."],
+  ["🗣️","Polish is the official language of Poland."],
+  ["🌊","Poland has a coastline on the Baltic Sea."],
+  ["☀️","Copernicus was born in Toruń."],
+  ["🎹","Frédéric Chopin was born in Poland."],
+  ["⚛️","Marie Curie was born in Warsaw."],
+  ["🧂","You can visit underground chapels carved from salt."],
+  ["🏰","Malbork is Europe's largest medieval castle by land area."],
+  ["🦬","European bison live in Białowieża Forest."],
+  ["⚖️","The European bison is one of the heaviest land animals in Europe."],
+  ["🥟","Pierogi can be filled with potatoes, cheese, meat, mushrooms… or even fruit."],
+  ["🗺️","Poland is divided into 16 regions called voivodeships."],
+  ["🌲","Poland has 23 national parks."],
+  ["🧱","Warsaw's historic centre was largely rebuilt after World War II."],
+  ["🍪","Toruń is famous for gingerbread."],
+  ["🌳","The Crooked Forest is full of pine trees with oddly curved trunks."],
+  ["👅","“Chrząszcz” is a real Polish word. Try saying it!"],
+  ["😂","The town of Wąchock is famous for jokes about its residents."],
+  ["🔤","The Polish alphabet has letters like ł, ś and ź."],
+  ["🎄","Some Christmas Eve dinners have twelve dishes."],
+  ["🕊️","The Polish word for pigeon is “gołąb”."],
+  ["🍩","On Fat Thursday, Poles eat doughnuts called pączki."]
+];
+for(let i=FACTS.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [FACTS[i],FACTS[j]]=[FACTS[j],FACTS[i]]; }
+const focCard=document.getElementById("focCard"); let focAt=0;
+document.getElementById("focN").textContent=FACTS.length;
+const showFact=(anim)=>{
+  document.getElementById("focEm").textContent=FACTS[focAt][0];
+  document.getElementById("focTxt").textContent=FACTS[focAt][1];
+  document.getElementById("focI").textContent=focAt+1;
+  if(anim){ focCard.classList.remove("swap"); void focCard.offsetWidth; focCard.classList.add("swap"); }
+};
+const nextFact=()=>{ focAt=(focAt+1)%FACTS.length; showFact(true); if(navigator.vibrate) navigator.vibrate(15); };
+focCard.addEventListener("click",nextFact);
+document.getElementById("focNext").addEventListener("click",nextFact);
+showFact(false);
 
 document.getElementById("share").addEventListener("click",async()=>{
   const data={title:"Visit Poland",text:"10 places in Poland 🇵🇱",url:location.href.split("#")[0]};
